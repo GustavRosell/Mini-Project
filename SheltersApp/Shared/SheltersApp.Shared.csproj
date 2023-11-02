@@ -14,7 +14,6 @@
     <None Remove="Storage\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\" />
     <Folder Include="Storage\" />
   </ItemGroup>
   <ItemGroup>

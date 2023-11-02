@@ -10,6 +10,9 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
+
+
+
     <div class="form-group">
         <label for="bookingID">Booking ID:</label>
         <InputText id="bookingID" class="form-control" @bind-Value="newBooking.BookingID" />
@@ -42,7 +45,7 @@
         }
         else
         {
-            // Håndter fejl, f.eks. ved at vise en fejlmeddelelse til brugeren
+            // Håndter fejl, f.eks. ved at vise en fejlmeddelelse til brugeren her hvis der er tid til det
         }
     }
 }
