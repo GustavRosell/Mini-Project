@@ -1,8 +1,7 @@
 ﻿@page "/Booking"
-@inject HttpClient Http
 @inject NavigationManager NavigationManager
+@inject HttpClient Http
 @using SheltersApp.Shared.Model;
-@using SheltersApp.Shared.Storage;
 
 <h3>Opret Booking</h3>
 
@@ -10,8 +9,16 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-
-
+    <!-- forsøg på drop down menu -->
+    <div class="form-group">
+        <label for="shelters">Choose Shelter:</label>
+        <select @bind="newBooking.ShelterName" class="form-control">
+            @foreach (var shelter in shelters)
+            {
+                <option value="@shelter.Navn">@shelter.Navn</option>
+            }
+        </select>
+    </div>
 
     <div class="form-group">
         <label for="bookingID">Booking ID:</label>
@@ -34,11 +41,20 @@
 </EditForm>
 
 @code {
-    Booking newBooking = new Booking(bookingID: "", name: "", location: "");
+    private string selectedShelterNavn;
+    private List<Shelter> shelters = new List<Shelter>();
+
+    Booking newBooking = new Booking(bookingID: "", name: "", location: "", shelterName: "");
+
+    protected override async Task OnInitializedAsync()
+    {
+        shelters = await Http.GetFromJsonAsync<List<Shelter>>("api/shelter");
+    }
 
     private async Task HandleValidSubmit()
     {
         var response = await Http.PostAsJsonAsync("api/bookings", newBooking);
+
         if (response.IsSuccessStatusCode)
         {
             NavigationManager.NavigateTo("/BookingList");

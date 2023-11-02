@@ -13,14 +13,16 @@ namespace SheltersApp.Shared.Model
         public string BookingID { get; set; }
         public string Name { get; set; }
         public string Location { get; set; }
+        public string ShelterName { get; set; }
 
         // Konstruktør til at oprette en booking kan tilføjes her
-        public Booking(string bookingID, string name, string location)
+        public Booking(string bookingID, string name, string location, string shelterName)
         {
-            Id = bookingID; // Sætter MongoDB dokumentets Id // Usikker på om jeg overhovedet skal bruge det her?
+            Id = bookingID; // Sætter MongoDB dokumentets Id // Usikker på om jeg overhovedet skal bruge det her? // update; ja, for det virker heller ikke med Shelter.cs hvis det ikke er der. databasen kan ikke tilgåes
             BookingID = bookingID;
             Name = name;
             Location = location;
+            ShelterName = shelterName;
         }
     }
 }

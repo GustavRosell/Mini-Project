@@ -9,7 +9,7 @@ namespace SheltersApp.Shared.Model
         public BookingList(IMongoClient client)
         {
             var database = client.GetDatabase("shelterDB");
-            _bookings = database.GetCollection<Booking>("shelter_minus");
+            _bookings = database.GetCollection<Booking>("bookings");
         }
 
         public async Task<List<Booking>> GetAllBookingsAsync()
