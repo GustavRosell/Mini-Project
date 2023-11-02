@@ -1,0 +1,48 @@
+﻿@page "/Booking"
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@using SheltersApp.Shared.Model;
+@using SheltersApp.Shared.Storage;
+
+<h3>Opret Booking</h3>
+
+<EditForm Model="newBooking" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="bookingID">Booking ID:</label>
+        <InputText id="bookingID" class="form-control" @bind-Value="newBooking.BookingID" />
+    </div>
+
+    <div class="form-group">
+        <label for="name">Navn:</label>
+        <InputText id="name" class="form-control" @bind-Value="newBooking.Name" />
+    </div>
+
+    <div class="form-group">
+        <label for="location">Lokation:</label>
+        <InputText id="location" class="form-control" @bind-Value="newBooking.Location" />
+    </div>
+
+    <!-- Du kan tilføje flere felter her efter behov -->
+
+    <button type="submit" class="btn btn-primary">Opret Booking</button>
+</EditForm>
+
+@code {
+    Booking newBooking = new Booking(bookingID: "", name: "", location: "");
+
+    private async Task HandleValidSubmit()
+    {
+        var response = await Http.PostAsJsonAsync("api/bookings", newBooking);
+        if (response.IsSuccessStatusCode)
+        {
+            NavigationManager.NavigateTo("/BookingList");
+        }
+        else
+        {
+            // Håndter fejl, f.eks. ved at vise en fejlmeddelelse til brugeren
+        }
+    }
+}
