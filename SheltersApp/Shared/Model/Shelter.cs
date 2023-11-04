@@ -15,7 +15,7 @@ namespace SheltersApp.Shared.Model
         public string Id { get; set; } // MongoDB kræver en egenskab kaldet Id
 
         [BsonElement("navn")]
-        public string Navn { get; set; }
+        public string Navn { get; set; } = " ";
 
     }
 }

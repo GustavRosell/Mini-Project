@@ -22,7 +22,7 @@
 
     <div class="form-group">
         <label for="bookingID">Booking ID:</label>
-        <InputText id="bookingID" class="form-control" @bind-Value="newBooking.BookingID" />
+        <InputText id="bookingID" class="form-control" @bind-Value="newBooking.BookingID.ToString()" />
     </div>
 
     <div class="form-group">
@@ -31,8 +31,8 @@
     </div>
 
     <div class="form-group">
-        <label for="location">Lokation:</label>
-        <InputText id="location" class="form-control" @bind-Value="newBooking.Location" />
+        <label for="location">Telefonnr:</label>
+        <InputText id="telfonnr" class="form-control" @bind-Value="newBooking.Telefonnr.ToString()" />
     </div>
 
     <!-- Du kan tilføje flere felter her efter behov -->
@@ -44,7 +44,7 @@
     private string selectedShelterNavn;
     private List<Shelter> shelters = new List<Shelter>();
 
-    Booking newBooking = new Booking(bookingID: "", name: "", location: "", shelterName: "");
+    Booking newBooking = new Booking(bookingID: 0, name: "Indtast Navn", telefonnr: 88888888, shelterName: "");
 
     protected override async Task OnInitializedAsync()
     {
