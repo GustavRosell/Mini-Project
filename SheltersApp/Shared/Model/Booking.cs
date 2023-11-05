@@ -14,8 +14,8 @@ namespace SheltersApp.Shared.Model
         public string Name { get; set; }
         public string Telefonnr { get; set; }
         public string ShelterName { get; set; }
-        public DateTime? StartDate { get; set; } // For DateRangePicker nugetpackage kræver den '?' ellers virker det ikk
-        public DateTime? EndDate { get; set; } // For DateRangePicker nugetpackage kræver den '?' ellers virker det ikk    
+        public DateTime? StartDate { get; set; } 
+        public DateTime? EndDate { get; set; }
 
         // Parameterløs konstruktør for MongoDB ? hvorfor ?
         public Booking() { }

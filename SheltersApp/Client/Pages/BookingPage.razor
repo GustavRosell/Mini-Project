@@ -4,13 +4,13 @@
 @using SheltersApp.Shared.Model;
 @using BlazorDateRangePicker;
 
-
 <h3>Opret Booking</h3>
 
 <EditForm Model="newBooking" OnValidSubmit="HandleValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
+    <!-- Tilføjer Shelters dropdown menu -->
     <div class="form-group">
         <label for="shelters" class="bold-label">Choose Shelter:</label>
         <select @bind="SelectedShelterName" @bind:event="onchange" class="form-control">
@@ -34,28 +34,36 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
+                    <!-- Vis Navn her -->
                     <label for="name" class="bold-label">Navn:</label>
                     <InputText id="name" class="form-control" @bind-Value="newBooking.Name" />
                 </div>
+                <!--  Vis Telefonnr her-->
                 <div class="form-group">
                     <label for="telefonnr" class="bold-label">Telefonnr:</label>
                     <InputText id="telefonnr" class="form-control" @bind-Value="newBooking.Telefonnr" />
                 </div>
             </div>
+            <!-- Date Range Picker -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="startDate" class="bold-label">Vælg Datoer:</label>
-                    <DateRangePicker @bind-StartDate="newBooking.StartDate" @bind-EndDate="newBooking.EndDate" class="form-control" />
+                    <label class="bold-label">Vælg Datoer:</label>
+                    <DateRangePicker @bind-StartDate="StartDate" @bind-EndDate="EndDate" />
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Opret Booking knap -->
     <button type="submit" class="btn btn-primary">Opret Booking</button>
 
 </EditForm>
 
 @code {
+    // Date Range Picker
+    DateTimeOffset? StartDate { get; set; } = DateTime.Today.AddMonths(-1);
+    DateTimeOffset? EndDate { get; set; } = DateTime.Today.AddDays(1).AddTicks(-1);
+
     private List<Shelter> shelters = new List<Shelter>();
     Booking newBooking = new Booking
     {
@@ -101,8 +109,7 @@
         newBooking.BookingID = rnd.Next(1000, 10000).ToString(); // Genererer et tal mellem 1000 og 9999
     }
 
-
-    // Metode for, når man trykker på shelter i dropdown at det vises i beskrivelses cellen
+    // Metode for, når man trykker på shelter i dropdown at det vises i beskrivelses cellen forneden
     private void OnShelterSelected(string shelterName)
     {
         GenerateRandomBookingId(); // Sæt et nyt random BookingID før hver indsendelse
@@ -110,19 +117,28 @@
         selectedShelterDescription = selectedShelter.Lang_beskr;
     }
 
+    // Metode for til
     private async Task HandleValidSubmit()
     {
-        var response = await Http.PostAsJsonAsync("api/bookings", newBooking);
+        // Konverter DateTimeOffset til DateTime
+        newBooking.StartDate = StartDate?.DateTime;
+        newBooking.EndDate = EndDate?.DateTime;
 
-        if (response.IsSuccessStatusCode)
+        try
         {
-            NavigationManager.NavigateTo("/BookingList");
+            var response = await Http.PostAsJsonAsync("api/bookings", newBooking);
+            if (response.IsSuccessStatusCode)
+            {
+                NavigationManager.NavigateTo("/BookingList");
+            }
+            else
+            {
+                // Tilføj brugervenlig fejlmeddelelse her
+            }
         }
-        else
+        catch (Exception ex)
         {
-            // Håndter fejl, f.eks. ved at vise en fejlmeddelelse til brugeren
+            // Log fejlen og vis fejlmeddelelse til brugeren
         }
     }
 }
-
-
