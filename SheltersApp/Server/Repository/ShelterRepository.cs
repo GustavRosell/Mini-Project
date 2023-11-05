@@ -14,7 +14,7 @@ namespace SheltersApp.Server.Repository
 		public ShelterRepository(Persistency persistency)
         {
             var database = persistency.GetDatabase();
-            _shelters = database.GetCollection<Shelter>("shelter");
+            _shelters = database.GetCollection<Shelter>("shelterSIU");
         }
 
         public async Task<IEnumerable<Shelter>> GetAllShelters()

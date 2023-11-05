@@ -17,5 +17,13 @@ namespace SheltersApp.Shared.Model
         [BsonElement("navn")]
         public string Navn { get; set; } = " ";
 
+        [BsonElement("lang_beskr")]
+        public string Lang_beskr { get; set; } = " ";
+
+        [BsonElement("beskrivels")]
+        public string Beskrivelse { get; set; } = " ";
+
+        [BsonElement("status")]
+        public string Status { get; set; } = " ";
     }
 }

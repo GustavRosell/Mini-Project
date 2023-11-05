@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.ResponseCompression;
+﻿using System.Net.NetworkInformation;
+using Microsoft.AspNetCore.ResponseCompression;
 using MongoDB.Driver;
 using SheltersApp.Repositories;
 using SheltersApp.Server.Repository;
@@ -15,16 +16,14 @@ var database = mongoClient.GetDatabase("shelterDB");
 builder.Services.AddSingleton<IMongoClient>(mongoClient);
 builder.Services.AddSingleton(database);
 
-// Tilføj Repository
+// Tilføjer Repository
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
 
-
-
-// Tilføj Persistency som en singleton service
+// Tilføjer Persistency som en singleton service
 builder.Services.AddSingleton<Persistency>();
 
-// Tilføj controllers med views og Razor Pages til DI containeren
+// Tilføjer controllers med views og Razor Pages til DI containeren
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 

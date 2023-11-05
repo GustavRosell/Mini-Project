@@ -2,6 +2,8 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 @using SheltersApp.Shared.Model;
+@using Syncfusion.Blazor.Calendars;
+
 
 <h3>Opret Booking</h3>
 
@@ -9,46 +11,82 @@
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <!-- forsøg på drop down menu -->
     <div class="form-group">
-        <label for="shelters">Choose Shelter:</label>
-        <select @bind="newBooking.ShelterName" class="form-control">
+        <label for="shelters" class="bold-label">Choose Shelter:</label>
+        <select @bind="SelectedShelterName" @bind:event="onchange" class="form-control">
             @foreach (var shelter in shelters)
             {
                 <option value="@shelter.Navn">@shelter.Navn</option>
             }
         </select>
     </div>
-
+    <!-- Vis lang_beskr for det valgte shelter her -->
     <div class="form-group">
-        <label for="bookingID">Booking ID:</label>
-        <InputText id="bookingID" class="form-control" @bind-Value="newBooking.BookingID.ToString()" />
+        <label for="shelterDescription" class="bold-label">Beskrivelse:</label>
+        <p id="shelterDescription" class="form-control-plaintext">@selectedShelterDescription</p>
     </div>
-
+    <!-- Vis Booking ID her -->
     <div class="form-group">
-        <label for="name">Navn:</label>
+        <label for="bookingID" class="bold-label">Booking ID:</label>
+        <p id="bookingID" class="form-control-plaintext">@newBooking.BookingID</p>
+    </div>
+    <div class="form-group">
+        <label for="name" class="bold-label">Navn:</label>
         <InputText id="name" class="form-control" @bind-Value="newBooking.Name" />
     </div>
-
     <div class="form-group">
-        <label for="location">Telefonnr:</label>
-        <InputText id="telfonnr" class="form-control" @bind-Value="newBooking.Telefonnr.ToString()" />
+        <label for="telefonnr" class="bold-label">Telefonnr:</label>
+        <InputText id="telefonnr" class="form-control" @bind-Value="newBooking.Telefonnr" />
     </div>
-
-    <!-- Du kan tilføje flere felter her efter behov -->
 
     <button type="submit" class="btn btn-primary">Opret Booking</button>
 </EditForm>
 
 @code {
-    private string selectedShelterNavn;
     private List<Shelter> shelters = new List<Shelter>();
+    Booking newBooking = new Booking(bookingID: "", name: "", telefonnr: "", shelterName: "");
+    private string selectedShelterDescription;
 
-    Booking newBooking = new Booking(bookingID: 0, name: "Indtast Navn", telefonnr: 88888888, shelterName: "");
+    // Property til at binde det valgte shelter navn og opdatere beskrivelsen
+    private string SelectedShelterName
+    {
+        get => newBooking.ShelterName;
+        set
+        {
+            if (newBooking.ShelterName != value)
+            {
+                newBooking.ShelterName = value;
+                OnShelterSelected(value);
+            }
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        shelters = await Http.GetFromJsonAsync<List<Shelter>>("api/shelter");
+        shelters = await Http.GetFromJsonAsync<List<Shelter>>("api/shelterSIU");
+
+        // Sørger for, at vise beskrivelse for det først viste shelter, når programmet åbnes
+        if (shelters.Any())
+        {
+            var firstShelter = shelters.First();
+            SelectedShelterName = firstShelter.Navn; // Dette vil også sætte selectedShelterDescription
+        }
+        GenerateRandomBookingId(); // Sæt et nyt random BookingID før hver indsendelse
+    }
+    // Generer et random tal mellem
+    private void GenerateRandomBookingId()
+    {
+        Random rnd = new Random();
+        newBooking.BookingID = rnd.Next(1000, 10000).ToString(); // Genererer et tal mellem 1000 og 9999
+    }
+
+
+    // Metode for, når man trykker på shelter i dropdown at det vises i beskrivelses cellen
+    private void OnShelterSelected(string shelterName)
+    {
+        GenerateRandomBookingId(); // Sæt et nyt random BookingID før hver indsendelse
+        var selectedShelter = shelters.FirstOrDefault(s => s.Navn == shelterName);
+        selectedShelterDescription = selectedShelter.Lang_beskr;
     }
 
     private async Task HandleValidSubmit()
@@ -61,7 +99,9 @@
         }
         else
         {
-            // Håndter fejl, f.eks. ved at vise en fejlmeddelelse til brugeren her hvis der er tid til det
+            // Håndter fejl, f.eks. ved at vise en fejlmeddelelse til brugeren
         }
     }
 }
+
+

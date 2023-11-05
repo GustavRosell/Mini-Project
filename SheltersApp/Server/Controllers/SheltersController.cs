@@ -7,7 +7,7 @@ using SheltersApp.Repositories;
 using SheltersApp.Server.Repository;
 
 [ApiController]
-[Route("api/shelter")]
+[Route("api/shelterSIU")]
 public class SheltersController : ControllerBase
 {
     private readonly IShelterRepository _repository;
