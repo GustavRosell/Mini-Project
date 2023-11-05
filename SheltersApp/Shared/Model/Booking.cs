@@ -14,15 +14,22 @@ namespace SheltersApp.Shared.Model
         public string Name { get; set; }
         public string Telefonnr { get; set; }
         public string ShelterName { get; set; }
+        public DateTime? StartDate { get; set; } // For DateRangePicker nugetpackage kræver den '?' ellers virker det ikk
+        public DateTime? EndDate { get; set; } // For DateRangePicker nugetpackage kræver den '?' ellers virker det ikk    
 
-        // Konstruktør til at oprette en booking kan tilføjes her
-        public Booking(string bookingID, string name, string telefonnr, string shelterName)
+        // Parameterløs konstruktør for MongoDB ? hvorfor ?
+        public Booking() { }
+
+        // Konstruktør til at oprette booking
+        public Booking(string bookingID, string name, string telefonnr, string shelterName, DateTime? startDate, DateTime? endDate)
         {
             Id = bookingID; // Sætter MongoDB dokumentets Id // Usikker på om jeg overhovedet skal bruge det her? // update; ja, for det virker heller ikke med Shelter.cs hvis det ikke er der. databasen kan ikke tilgåes
             BookingID = bookingID;
             Name = name;
             Telefonnr = telefonnr;
             ShelterName = shelterName;
+            StartDate = startDate;
+            EndDate = endDate;
         }
     }
 }

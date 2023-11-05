@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using SheltersApp.Repositories;
 using SheltersApp.Server.Repository;
 using SheltersApp.Shared.Storage;
+using BlazorDateRangePicker;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,18 @@ var database = mongoClient.GetDatabase("shelterDB");
 // Registrerer MongoDB-tjenester
 builder.Services.AddSingleton<IMongoClient>(mongoClient);
 builder.Services.AddSingleton(database);
+
+// Date Range Picker --> Calendar
+
+/*
+builder.Services.AddDateRangePicker(config =>
+{
+    config.Attributes = new Dictionary<string, object>
+                {
+                    { "class", "form-control form-control-sm" }
+                };
+});
+*/
 
 // Tilføjer Repository
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
