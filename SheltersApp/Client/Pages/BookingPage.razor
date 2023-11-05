@@ -44,8 +44,8 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label class="bold-label">Vælg Datoer:</label>
-                    <DateRangePicker @bind-StartDate="StartDate" @bind-EndDate="EndDate" class="form-control" />
+                    <label for="startDate" class="bold-label">Vælg Datoer:</label>
+                    <DateRangePicker @bind-StartDate="newBooking.StartDate" @bind-EndDate="newBooking.EndDate" class="form-control" />
                 </div>
             </div>
         </div>
@@ -56,9 +56,6 @@
 </EditForm>
 
 @code {
-    // Ting til DateRangePicker
-    DateTimeOffset? StartDate { get; set; } = DateTime.Today.AddMonths(-1);
-    DateTimeOffset? EndDate { get; set; } = DateTime.Today.AddDays(1).AddTicks(-1);
     private List<Shelter> shelters = new List<Shelter>();
     Booking newBooking = new Booking
     {

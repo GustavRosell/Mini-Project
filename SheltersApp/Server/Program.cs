@@ -17,18 +17,6 @@ var database = mongoClient.GetDatabase("shelterDB");
 builder.Services.AddSingleton<IMongoClient>(mongoClient);
 builder.Services.AddSingleton(database);
 
-// Date Range Picker --> Calendar
-
-/*
-builder.Services.AddDateRangePicker(config =>
-{
-    config.Attributes = new Dictionary<string, object>
-                {
-                    { "class", "form-control form-control-sm" }
-                };
-});
-*/
-
 // Tilføjer Repository
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IShelterRepository, ShelterRepository>();
