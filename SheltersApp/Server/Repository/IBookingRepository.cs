@@ -1,14 +1,16 @@
-﻿namespace SheltersApp.Repositories
-{
-    using SheltersApp.Shared.Model;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+﻿using SheltersApp.Shared.Model;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-    public interface IBookingRepository
-    {
-        Task<IEnumerable<Booking>> GetAllBookings();
-        Task AddBooking(Booking booking);
-        // Andre metoder som Update, Delete kan også tilføjes her
-        Task DeleteBooking(string bookingId); // Tilføj denne linje
-    }
+// Interface der definerer kontrakten for booking repository
+public interface IBookingRepository
+{
+    // Deklarerer en metode til at hente alle bookinger
+    Task<IEnumerable<Booking>> GetAllBookings();
+
+    // Deklarerer en metode til at tilføje en booking
+    Task AddBooking(Booking booking);
+
+    // Deklarerer en metode til at slette en booking baseret på ID
+    Task DeleteBooking(string bookingId);
 }

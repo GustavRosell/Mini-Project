@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace SheltersApp.Shared.Model
@@ -15,15 +10,15 @@ namespace SheltersApp.Shared.Model
         public string? Id { get; set; } // MongoDB kræver en egenskab kaldet Id
 
         [BsonElement("navn")]
-        public string Navn { get; set; } = " ";
+        public string Navn { get; set; } = " "; // Navn på shelteret
 
         [BsonElement("lang_beskr")]
-        public string Lang_beskr { get; set; } = " ";
+        public string Lang_beskr { get; set; } = " "; // Lang beskrivelse af shelteret
 
         [BsonElement("beskrivels")]
-        public string Beskrivelse { get; set; } = " ";
+        public string Beskrivelse { get; set; } = " "; // Kort beskrivelse af shelteret // ikke brugt
 
         [BsonElement("status")]
-        public string Status { get; set; } = " ";
+        public string Status { get; set; } = " "; // Status for shelteret (f.eks. ledig, optaget) // ikke brugt
     }
 }

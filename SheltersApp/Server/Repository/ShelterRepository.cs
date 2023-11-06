@@ -1,25 +1,21 @@
-﻿using System;
-namespace SheltersApp.Server.Repository
+﻿using MongoDB.Driver;
+using SheltersApp.Shared.Model;
+using SheltersApp.Shared.Storage;
+
+public class ShelterRepository : IShelterRepository
 {
-    using MongoDB.Driver;
-    using SheltersApp.Shared.Model;
-    using SheltersApp.Shared.Storage;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+    private readonly IMongoCollection<Shelter> _shelters;
 
-    public class ShelterRepository : IShelterRepository
-	{
-        private readonly IMongoCollection<Shelter> _shelters;
+    // Konstruktøren initialiserer forbindelsen til 'shelterSIU' collection i MongoDB
+    public ShelterRepository(Persistency persistency)
+    {
+        var database = persistency.GetDatabase();
+        _shelters = database.GetCollection<Shelter>("shelterSIU");
+    }
 
-		public ShelterRepository(Persistency persistency)
-        {
-            var database = persistency.GetDatabase();
-            _shelters = database.GetCollection<Shelter>("shelterSIU");
-        }
-
-        public async Task<IEnumerable<Shelter>> GetAllShelters()
-        {
-            return await _shelters.Find(_ => true).ToListAsync();
-        }
+    // Metode til at hente alle shelters asynkront
+    public async Task<IEnumerable<Shelter>> GetAllShelters()
+    {
+        return await _shelters.Find(_ => true).ToListAsync();
     }
 }

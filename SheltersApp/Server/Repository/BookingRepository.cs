@@ -1,37 +1,35 @@
-﻿namespace SheltersApp.Repositories
+﻿using MongoDB.Driver;
+using SheltersApp.Shared.Model;
+using SheltersApp.Shared.Storage;
+
+public class BookingRepository : IBookingRepository
 {
-    using MongoDB.Driver;
-    using SheltersApp.Shared.Model;
-    using SheltersApp.Shared.Storage;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
+    private readonly IMongoCollection<Booking> _bookings;
 
-    public class BookingRepository : IBookingRepository
+    // Konstruktøren initialiserer forbindelsen til 'bookings' collection i MongoDB
+    public BookingRepository(Persistency persistency)
     {
-        private readonly IMongoCollection<Booking> _bookings;
-
-        public BookingRepository(Persistency persistency)
-        {
-            var database = persistency.GetDatabase();
-            _bookings = database.GetCollection<Booking>("bookings");
-        }
-
-        public async Task<IEnumerable<Booking>> GetAllBookings()
-        {
-            return await _bookings.Find(_ => true).ToListAsync();
-        }
-
-        public async Task AddBooking(Booking booking)
-        {
-            await _bookings.InsertOneAsync(booking);
-        }
-
-        // Implementér andre metoder som Update, Delete her
-
-        public async Task DeleteBooking(string bookingId)
-        {
-            await _bookings.DeleteOneAsync(b => b.BookingID == bookingId);
-        }
-
+        var database = persistency.GetDatabase();
+        _bookings = database.GetCollection<Booking>("bookings");
     }
+
+    // Metode til at hente alle bookinger asynkront
+    public async Task<IEnumerable<Booking>> GetAllBookings()
+    {
+        return await _bookings.Find(_ => true).ToListAsync();
+    }
+
+    // Metode til at tilføje en ny booking asynkront
+    public async Task AddBooking(Booking booking)
+    {
+        await _bookings.InsertOneAsync(booking);
+    }
+
+    // Metode til at slette en booking asynkront baseret på ID
+    public async Task DeleteBooking(string bookingId)
+    {
+        await _bookings.DeleteOneAsync(b => b.BookingID == bookingId);
+    }
+
+    // Yderligere CRUD operationer som Update kan implementeres her
 }

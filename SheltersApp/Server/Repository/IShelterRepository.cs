@@ -1,12 +1,10 @@
-﻿using System;
-namespace SheltersApp.Server.Repository
-{
-	using SheltersApp.Shared.Model;
-	using System.Collections.Generic;
-	using System.Threading.Tasks;
+﻿using SheltersApp.Shared.Model;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-	public interface IShelterRepository
-	{
-		Task<IEnumerable<Shelter>> GetAllShelters();
-	}
+// Interface der definerer kontrakten for shelter repository
+public interface IShelterRepository
+{
+    // Deklarerer en metode til at hente alle shelters
+    Task<IEnumerable<Shelter>> GetAllShelters();
 }

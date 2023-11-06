@@ -1,8 +1,4 @@
-﻿using System.Net.NetworkInformation;
-using Microsoft.AspNetCore.ResponseCompression;
-using MongoDB.Driver;
-using SheltersApp.Repositories;
-using SheltersApp.Server.Repository;
+﻿using MongoDB.Driver;
 using SheltersApp.Shared.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
