@@ -27,5 +27,11 @@
         }
 
         // Implementér andre metoder som Update, Delete her
+
+        public async Task DeleteBooking(string bookingId)
+        {
+            await _bookings.DeleteOneAsync(b => b.BookingID == bookingId);
+        }
+
     }
 }

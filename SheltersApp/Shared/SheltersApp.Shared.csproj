@@ -19,6 +19,5 @@
   <ItemGroup>
     <PackageReference Include="MongoDB.Bson" Version="2.22.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.22.0" />
-    <PackageReference Include="BlazorDateRangePicker" Version="4.4.0" />
   </ItemGroup>
 </Project>

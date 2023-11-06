@@ -35,10 +35,6 @@ public class BookingsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> OpretBooking([FromBody] Booking booking)
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState); // Dette vil vise valideringsfejl
-        }
         try
         {
             await _repository.AddBooking(booking);
@@ -51,4 +47,18 @@ public class BookingsController : ControllerBase
     }
 
     // Her kan du tilføje yderligere metoder til at opdatere, slette osv., baseret på din repository implementering
+    [HttpDelete("{bookingId}")]
+    public async Task<IActionResult> DeleteBooking(string bookingId)
+    {
+        try
+        {
+            await _repository.DeleteBooking(bookingId);
+            return Ok();
+        }
+        catch (System.Exception ex)
+        {
+            return StatusCode(500, $"En fejl opstod ved sletning af booking. Fejl: {ex.Message}");
+        }
+    }
+
 }

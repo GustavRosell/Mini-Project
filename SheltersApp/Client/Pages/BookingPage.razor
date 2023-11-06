@@ -2,7 +2,6 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 @using SheltersApp.Shared.Model;
-@using BlazorDateRangePicker;
 
 <h3>Opret Booking</h3>
 
@@ -12,7 +11,7 @@
 
     <!-- Tilføjer Shelters dropdown menu -->
     <div class="form-group">
-        <label for="shelters" class="bold-label">Choose Shelter:</label>
+        <label for="shelters" class="bold-label">Vælg Shelter:</label>
         <select @bind="SelectedShelterName" @bind:event="onchange" class="form-control">
             @foreach (var shelter in shelters)
             {
@@ -32,23 +31,27 @@
     </div>
     <div class="container">
         <div class="row">
+            <!-- Navn og Telefonnr kolonne -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <!-- Vis Navn her -->
                     <label for="name" class="bold-label">Navn:</label>
                     <InputText id="name" class="form-control" @bind-Value="newBooking.Name" />
                 </div>
-                <!--  Vis Telefonnr her-->
                 <div class="form-group">
                     <label for="telefonnr" class="bold-label">Telefonnr:</label>
                     <InputText id="telefonnr" class="form-control" @bind-Value="newBooking.Telefonnr" />
                 </div>
             </div>
-            <!-- Date Range Picker -->
+
+            <!-- Dato kolonne -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <label class="bold-label">Vælg Datoer:</label>
-                    <DateRangePicker @bind-StartDate="StartDate" @bind-EndDate="EndDate" />
+                    <label for="startDate" class="bold-label">Start Dato:</label>
+                    <input type="date" id="startDate" @bind="tempStartDate" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label for="endDate" class="bold-label">Slut Dato:</label>
+                    <input type="date" id="endDate" @bind="tempEndDate" class="form-control" />
                 </div>
             </div>
         </div>
@@ -56,25 +59,20 @@
 
     <!-- Opret Booking knap -->
     <button type="submit" class="btn btn-primary">Opret Booking</button>
-
 </EditForm>
 
 @code {
-    // Date Range Picker
-    DateTimeOffset? StartDate { get; set; } = DateTime.Today.AddMonths(-1);
-    DateTimeOffset? EndDate { get; set; } = DateTime.Today.AddDays(1).AddTicks(-1);
+
+    // private List<Shelter> shelters = new List<Shelter>();
+    // private Booking newBooking = new Booking(bookingID: "", name: "", telefonnr: "", shelterName: "", startDate: "", endDate: "");
+
 
     private List<Shelter> shelters = new List<Shelter>();
-    Booking newBooking = new Booking
-    {
-        BookingID = "",
-        Name = "",
-        Telefonnr = "",
-        ShelterName = "",
-        StartDate = null,
-        EndDate = null
-    };
+    private Booking newBooking = new Booking();
     private string selectedShelterDescription;
+
+    private DateTime tempStartDate = DateTime.Today; // Midlertidig property til at håndtere dato input
+    private DateTime tempEndDate = DateTime.Today.AddDays(1); // Midlertidig property til at håndtere dato input
 
     // Property til at binde det valgte shelter navn og opdatere beskrivelsen
     private string SelectedShelterName
@@ -93,60 +91,42 @@
     protected override async Task OnInitializedAsync()
     {
         shelters = await Http.GetFromJsonAsync<List<Shelter>>("api/shelterSIU");
-
-        // Sørger for, at vise beskrivelse for det først viste shelter, når programmet åbnes
         if (shelters.Any())
         {
             var firstShelter = shelters.First();
-            SelectedShelterName = firstShelter.Navn; // Dette vil også sætte selectedShelterDescription
+            SelectedShelterName = firstShelter.Navn;
+            selectedShelterDescription = firstShelter.Lang_beskr;
+            GenerateRandomBookingId();
         }
-        GenerateRandomBookingId(); // Sæt et nyt random BookingID før hver indsendelse
     }
-    // Generer et random tal mellem
+
     private void GenerateRandomBookingId()
     {
         Random rnd = new Random();
-        newBooking.BookingID = rnd.Next(1000, 10000).ToString(); // Genererer et tal mellem 1000 og 9999
+        newBooking.BookingID = rnd.Next(1000, 10000).ToString();
     }
 
-    // Metode for, når man trykker på shelter i dropdown at det vises i beskrivelses cellen forneden
     private void OnShelterSelected(string shelterName)
     {
-        GenerateRandomBookingId(); // Sæt et nyt random BookingID før hver indsendelse
-        var selectedShelter = shelters.FirstOrDefault(s => s.Navn == shelterName);
-        selectedShelterDescription = selectedShelter.Lang_beskr;
+        GenerateRandomBookingId();
+        selectedShelterDescription = shelters.FirstOrDefault(s => s.Navn == shelterName)?.Lang_beskr;
     }
 
-    // Metode for til
     private async Task HandleValidSubmit()
     {
-        if (StartDate.HasValue && EndDate.HasValue)
+
+        // Konverter de midlertidige datoer til string i "yyyy-MM-dd" format
+        newBooking.StartDate = tempStartDate.ToString("yyyy-MM-dd");
+        newBooking.EndDate = tempEndDate.ToString("yyyy-MM-dd");
+
+        var response = await Http.PostAsJsonAsync("api/bookings", newBooking);
+        if (response.IsSuccessStatusCode)
         {
-            // Formaterer StartDate og EndDate som strengværdier, der kun indeholder datoen
-            var formattedStartDate = StartDate.Value.ToString("yyyy-MM-dd");
-            var formattedEndDate = EndDate.Value.ToString("yyyy-MM-dd");
-
-            // Konstruerer en ny BookingDTO (eller lignende objekt) til at sende data
-            var bookingDto = new
-            {
-                BookingID = newBooking.BookingID,
-                Name = newBooking.Name,
-                Telefonnr = newBooking.Telefonnr,
-                ShelterName = newBooking.ShelterName,
-                StartDate = formattedStartDate,
-                EndDate = formattedEndDate
-            };
-
-            // Sender den nye DTO i stedet for newBooking objektet
-            var response = await Http.PostAsJsonAsync("api/bookings", bookingDto);
-            if (response.IsSuccessStatusCode)
-            {
-                NavigationManager.NavigateTo("/BookingList");
-            }
-            else
-            {
-                // Håndter fejl, f.eks. ved at vise en fejlmeddelelse til brugeren
-            }
+            NavigationManager.NavigateTo("/BookingList");
+        }
+        else
+        {
+            // Håndter fejl, f.eks. ved at vise en fejlmeddelelse til brugeren
         }
     }
 }

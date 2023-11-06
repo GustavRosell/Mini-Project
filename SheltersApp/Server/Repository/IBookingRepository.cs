@@ -9,5 +9,6 @@
         Task<IEnumerable<Booking>> GetAllBookings();
         Task AddBooking(Booking booking);
         // Andre metoder som Update, Delete kan også tilføjes her
+        Task DeleteBooking(string bookingId); // Tilføj denne linje
     }
 }

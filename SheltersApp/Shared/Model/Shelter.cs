@@ -12,7 +12,7 @@ namespace SheltersApp.Shared.Model
     {
         [BsonId] // MongoDB primær nøgle
         [BsonRepresentation(BsonType.ObjectId)] // Tillad MongoDB at konvertere fra og til ObjectId automatisk
-        public string Id { get; set; } // MongoDB kræver en egenskab kaldet Id
+        public string? Id { get; set; } // MongoDB kræver en egenskab kaldet Id
 
         [BsonElement("navn")]
         public string Navn { get; set; } = " ";

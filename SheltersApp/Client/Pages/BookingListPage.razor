@@ -17,6 +17,7 @@
             <th>Shelter</th>
             <th>Start Date</th>
             <th>End Date</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -29,6 +30,9 @@
                 <td>@booking.ShelterName</td>
                 <td>@booking.StartDate</td>
                 <td>@booking.EndDate</td>
+                <td>
+                    <button class="btn btn-danger" @onclick="() => DeleteBooking(booking.BookingID)">Delete</button>
+                </td>
             </tr>
         }
     </tbody>
@@ -49,5 +53,12 @@
     private void NavigateToAddBooking()
     {
         NavigationManager.NavigateTo("/Booking");
+    }
+
+    // Delete funktion
+    private async Task DeleteBooking(string bookingId)
+    {
+        await http.DeleteAsync($"api/bookings/{bookingId}");
+        bookings.RemoveAll(b => b.BookingID == bookingId); // Opdater lokal liste efter sletning
     }
 }
