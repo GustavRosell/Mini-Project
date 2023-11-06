@@ -11,10 +11,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Model\" />
-    <None Remove="Storage\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Storage\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MongoDB.Bson" Version="2.22.0" />

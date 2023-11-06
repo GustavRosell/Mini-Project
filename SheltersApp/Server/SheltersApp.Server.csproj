@@ -19,9 +19,11 @@
   <ItemGroup>
     <None Remove="Controllers\" />
     <None Remove="Repository\" />
+    <None Remove="Storage\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Repository\" />
+    <Folder Include="Storage\" />
   </ItemGroup>
 </Project>
