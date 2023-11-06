@@ -1,29 +1,32 @@
 ﻿@page "/BookingList"
 @inject NavigationManager NavigationManager;
 @inject HttpClient http;
-@using SheltersApp.Shared.Model
+@using SheltersApp.Shared.Model;
 
 <PageTitle>Booking List</PageTitle>
 
 <!-- Overskrift: -->
 <h1 class="mb-3 mt-3">Booking List</h1>
 
+<!-- Tabellen viser en liste af bookinger med deres detaljer -->
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>BookingID   </th>
+            <!-- Kolonneoverskrifter -->
+            <th>BookingID</th>
             <th>Name</th>
             <th>Phone Number</th>
             <th>Shelter</th>
             <th>Start Date</th>
             <th>End Date</th>
-            <th></th>
+            <th></th> // Tom kolonne for slet knappen
         </tr>
     </thead>
     <tbody>
-        @foreach (var booking in bookings)
+        @foreach (var booking in bookings) // Løber igennem hver booking i listen
         {
             <tr>
+                <!-- Kolonner med booking data -->
                 <td>@booking.BookingID</td>
                 <td>@booking.Name</td>
                 <td>@booking.Telefonnr</td>
@@ -31,6 +34,7 @@
                 <td>@booking.StartDate</td>
                 <td>@booking.EndDate</td>
                 <td>
+                    <!-- En knap der tillader brugeren at slette en booking -->
                     <button class="btn btn-danger" @onclick="() => DeleteBooking(booking.BookingID)">Delete</button>
                 </td>
             </tr>
@@ -38,27 +42,31 @@
     </tbody>
 </table>
 
+<!-- En knap til at navigere til siden for at tilføje en ny booking -->
 <button class="btn btn-secondary" @onclick="NavigateToAddBooking">Add New Booking</button>
 
 @code{
-    private List<Booking> bookings = new List<Booking>();
+    private List<Booking> bookings = new List<Booking>(); // Holder en liste af bookings hentet fra API
 
+    // Kaldes når komponenten er ved at blive initialiseret
     protected override async Task OnInitializedAsync()
     {
+        // Henter bookinger fra API og opdaterer 'bookings'-listen
         bookings = await http.GetFromJsonAsync<List<Booking>>("api/bookings");
     }
 
-
-    // Navigér mellem pages
+    // En metode der bruges til at navigere til tilføj-booking-siden
     private void NavigateToAddBooking()
     {
         NavigationManager.NavigateTo("/Booking");
     }
 
-    // Delete funktion
+    // Asynkron metode til at slette en booking baseret på dens ID
     private async Task DeleteBooking(string bookingId)
     {
+        // Udfører et DELETE-kald til serveren
         await http.DeleteAsync($"api/bookings/{bookingId}");
-        bookings.RemoveAll(b => b.BookingID == bookingId); // Opdater lokal liste efter sletning
+        // Opdaterer den lokale liste ved at fjerne den slettede booking
+        bookings.RemoveAll(b => b.BookingID == bookingId);
     }
 }
