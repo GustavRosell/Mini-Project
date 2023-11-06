@@ -62,14 +62,20 @@
 </EditForm>
 
 @code {
+    // Liste af `Shelter` objekter til at opbevare shelters hentet fra API
     private List<Shelter> shelters = new List<Shelter>();
+
+    // En ny `Booking` instans til at binde input fra brugeren på formen
     private Booking newBooking = new Booking();
+
+    // String til at opbevare og vise beskrivelsen af det valgte shelter
     private string selectedShelterDescription;
 
-    private DateTime tempStartDate = DateTime.Today; // Midlertidig property til at håndtere dato input
-    private DateTime tempEndDate = DateTime.Today.AddDays(1); // Midlertidig property til at håndtere dato input
+    // Midlertidig property til at håndtere dato input fra brugeren
+    private DateTime tempStartDate = DateTime.Today;
+    private DateTime tempEndDate = DateTime.Today.AddDays(1);
 
-    // Property til at binde det valgte shelter navn og opdatere beskrivelsen
+    // Property til at binde det valgte shelter navn fra dropdown og opdatere beskrivelsen
     private string SelectedShelterName
     {
         get => newBooking.ShelterName;
@@ -83,37 +89,44 @@
         }
     }
 
+    // Asynkron metode kaldt når komponenten initialiseres
     protected override async Task OnInitializedAsync()
     {
+        // Henter shelters fra API og opdaterer listen
         shelters = await Http.GetFromJsonAsync<List<Shelter>>("api/shelterSIU");
         if (shelters.Any())
         {
+            // Sætter standardværdier for den første shelter i listen
             var firstShelter = shelters.First();
             SelectedShelterName = firstShelter.Navn;
             selectedShelterDescription = firstShelter.Lang_beskr;
+            // Genererer et tilfældigt BookingID for den nye booking
             GenerateRandomBookingId();
         }
     }
 
+    // Genererer et tilfældigt BookingID
     private void GenerateRandomBookingId()
     {
         Random rnd = new Random();
         newBooking.BookingID = rnd.Next(1000, 10000).ToString();
     }
 
+    // Opdaterer den valgte shelters beskrivelse og genererer et nyt BookingID
     private void OnShelterSelected(string shelterName)
     {
         GenerateRandomBookingId();
         selectedShelterDescription = shelters.FirstOrDefault(s => s.Navn == shelterName)?.Lang_beskr;
     }
 
+    // Håndterer indsendelse af formen når alle input felter er gyldige
     private async Task HandleValidSubmit()
     {
-
-        // Konverter de midlertidige datoer til string i "yyyy-MM-dd" format
+        // Konverterer de midlertidige datoer til strengformatet "yyyy-MM-dd"
         newBooking.StartDate = tempStartDate.ToString("yyyy-MM-dd");
         newBooking.EndDate = tempEndDate.ToString("yyyy-MM-dd");
 
+        // Sender den nye booking til API og navigerer til booking listen hvis det lykkes
         var response = await Http.PostAsJsonAsync("api/bookings", newBooking);
         if (response.IsSuccessStatusCode)
         {
@@ -121,7 +134,7 @@
         }
         else
         {
-            // Håndter fejl, f.eks. ved at vise en fejlmeddelelse til brugeren
+            // Hvis der opstår en fejl ved indsendelse, skal fejlen håndteres, f.eks. ved at vise en fejlmeddelelse
         }
     }
 }
