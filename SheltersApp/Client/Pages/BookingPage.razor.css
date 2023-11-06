@@ -1,3 +1,9 @@
-﻿.bold-label {
+﻿/* Fed skrift til Labels */
+.bold-label {
     font-weight: bold;
+}
+
+/* Margins til Opret Booking knap */
+.add-booking-button {
+    margin-top: 20px;
 }
