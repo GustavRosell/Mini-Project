@@ -120,25 +120,33 @@
     // Metode for til
     private async Task HandleValidSubmit()
     {
-        // Konverter DateTimeOffset til DateTime
-        newBooking.StartDate = StartDate?.DateTime;
-        newBooking.EndDate = EndDate?.DateTime;
-
-        try
+        if (StartDate.HasValue && EndDate.HasValue)
         {
-            var response = await Http.PostAsJsonAsync("api/bookings", newBooking);
+            // Formaterer StartDate og EndDate som strengværdier, der kun indeholder datoen
+            var formattedStartDate = StartDate.Value.ToString("yyyy-MM-dd");
+            var formattedEndDate = EndDate.Value.ToString("yyyy-MM-dd");
+
+            // Konstruerer en ny BookingDTO (eller lignende objekt) til at sende data
+            var bookingDto = new
+            {
+                BookingID = newBooking.BookingID,
+                Name = newBooking.Name,
+                Telefonnr = newBooking.Telefonnr,
+                ShelterName = newBooking.ShelterName,
+                StartDate = formattedStartDate,
+                EndDate = formattedEndDate
+            };
+
+            // Sender den nye DTO i stedet for newBooking objektet
+            var response = await Http.PostAsJsonAsync("api/bookings", bookingDto);
             if (response.IsSuccessStatusCode)
             {
                 NavigationManager.NavigateTo("/BookingList");
             }
             else
             {
-                // Tilføj brugervenlig fejlmeddelelse her
+                // Håndter fejl, f.eks. ved at vise en fejlmeddelelse til brugeren
             }
-        }
-        catch (Exception ex)
-        {
-            // Log fejlen og vis fejlmeddelelse til brugeren
         }
     }
 }

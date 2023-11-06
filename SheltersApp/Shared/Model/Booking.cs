@@ -23,7 +23,6 @@ namespace SheltersApp.Shared.Model
         // Konstruktør til at oprette booking
         public Booking(string bookingID, string name, string telefonnr, string shelterName, DateTime? startDate, DateTime? endDate)
         {
-            Id = bookingID; // Sætter MongoDB dokumentets Id // Usikker på om jeg overhovedet skal bruge det her? // update; ja, for det virker heller ikke med Shelter.cs hvis det ikke er der. databasen kan ikke tilgåes
             BookingID = bookingID;
             Name = name;
             Telefonnr = telefonnr;

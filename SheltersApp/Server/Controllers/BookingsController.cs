@@ -35,6 +35,10 @@ public class BookingsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> OpretBooking([FromBody] Booking booking)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState); // Dette vil vise valideringsfejl
+        }
         try
         {
             await _repository.AddBooking(booking);
