@@ -1,0 +1,87 @@
+﻿@page "/ShelterList"
+@inject NavigationManager NavigationManager
+@inject HttpClient http
+@using SheltersApp.Shared.Model
+
+<PageTitle>Shelter List</PageTitle>
+
+<h1 class="mb-3 mt-3">Shelter List</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Navn</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var shelter in shelters)
+        {
+            <tr>
+                <td>@shelter.Navn</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="() => ShowBookings(shelter)">View Bookings</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<ModalDialog @ref="modalRef" Title="Bookings">
+    @if (selectedShelter != null)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>BookingID</th>
+                    <th>Navn</th>
+                    <th>Telefonnr</th>
+                    <th>Start Dato</th>
+                    <th>Slut Dato</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var booking in selectedShelterBookings)
+                {
+                    <tr>
+                        <td>@booking.BookingID</td>
+                        <td>@booking.Name</td>
+                        <td>@booking.Telefonnr</td>
+                        <td>@booking.StartDate</td>
+                        <td>@booking.EndDate</td>
+                        <td>
+                            <button class="btn btn-danger" @onclick="() => DeleteBooking(booking.BookingID)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</ModalDialog>
+
+@code {
+    private List<Shelter> shelters = new List<Shelter>();
+    private List<Booking> selectedShelterBookings = new List<Booking>();
+    private Shelter selectedShelter;
+    private ModalDialog modalRef { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        shelters = await http.GetFromJsonAsync<List<Shelter>>("api/shelterSIU");
+    }
+
+    private async void ShowBookings(Shelter shelter)
+    {
+        selectedShelter = shelter;
+        var t = await http.GetFromJsonAsync<List<Booking>>($"api/bookings");
+        selectedShelterBookings = t.Where(b => b.ShelterName.Equals(shelter.Navn)).ToList();
+        modalRef.Open();
+    }
+
+    private async Task DeleteBooking(string bookingId)
+    {
+        await http.DeleteAsync($"api/bookings/{bookingId}");
+        selectedShelterBookings.RemoveAll(b => b.BookingID == bookingId);
+    }
+}

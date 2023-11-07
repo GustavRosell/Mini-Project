@@ -29,6 +29,22 @@ public class BookingsController : ControllerBase
         }
     }
 
+    [HttpGet]
+    [Route("getby/{navn:alpha}")]
+    public async Task<ActionResult<IEnumerable<Booking>>> GetBookings(string alpha)
+    {
+        try
+        {
+            var bookings = await _repository.GetBookingsByShelterName(alpha);
+            return Ok(bookings);
+        }
+        catch (System.Exception ex)
+        {
+            // Håndterer eventuelle undtagelser og returnerer en 500 Internal Server Error respons
+            return StatusCode(500, $"En fejl opstod ved hentning af booking data. Fejl: {ex.Message}");
+        }
+    }
+
     // Opret en ny booking - HTTP POST metode
     [HttpPost]
     public async Task<IActionResult> OpretBooking([FromBody] Booking booking)

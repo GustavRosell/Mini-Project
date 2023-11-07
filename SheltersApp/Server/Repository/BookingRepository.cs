@@ -14,6 +14,12 @@ public class BookingRepository : IBookingRepository
     }
 
     // Metode til at hente alle bookinger asynkront
+    public async Task<IEnumerable<Booking>> GetBookingsByShelterName(string name)
+    {
+        return await _bookings.Find(b => b.ShelterName == name).ToListAsync();
+    }
+
+    // Metode til at hente alle bookinger asynkront
     public async Task<IEnumerable<Booking>> GetAllBookings()
     {
         return await _bookings.Find(_ => true).ToListAsync();

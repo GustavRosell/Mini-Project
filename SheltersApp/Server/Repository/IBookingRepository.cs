@@ -13,4 +13,6 @@ public interface IBookingRepository
 
     // Deklarerer en metode til at slette en booking baseret på ID
     Task DeleteBooking(string bookingId);
+
+    Task <IEnumerable<Booking>> GetBookingsByShelterName(string name);
 }
