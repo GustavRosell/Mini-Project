@@ -10,10 +10,10 @@ namespace SheltersApp.Shared.Storage
         // Konstruktøren opretter forbindelse til databasen med den givne forbindelsesstreng
         public Persistency()
         {
-            // Erstat med din egen forbindelsesstreng i en rigtig applikation
+            // forbindelsesstreng
             string connectionString = "mongodb+srv://gustavrosell:Gustav41541@dbdesign.q2bkeja.mongodb.net/";
             dbClient = new MongoClient(connectionString);
-            database = dbClient.GetDatabase("shelterdb"); // Navnet på din database
+            database = dbClient.GetDatabase("shelterdb");
         }
 
         // Metode til at hente MongoDB-databaseobjektet

@@ -1,4 +1,5 @@
 ﻿@page "/Booking"
+@page "/"
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 @using SheltersApp.Shared.Model;
@@ -23,11 +24,6 @@
     <div class="form-group">
         <label for="shelterDescription" class="bold-label">Beskrivelse:</label>
         <p id="shelterDescription" class="form-control-plaintext">@selectedShelterDescription</p>
-    </div>
-    <!-- Vis Booking ID her -->
-    <div class="form-group">
-        <label for="bookingID" class="bold-label">Booking ID:</label>
-        <p id="bookingID" class="form-control-plaintext">@newBooking.BookingID</p>
     </div>
     <div class="container">
         <div class="row">
